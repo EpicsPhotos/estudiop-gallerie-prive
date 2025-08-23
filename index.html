@@ -99,13 +99,14 @@
       max-width: 400px;
       text-align: left;
       display: none;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
     }
 
     .login-popup input, .verification-popup input {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
-      border-radius: 8px;
+      border-radius: 10px;
       border: 1px solid #ccc;
     }
 
@@ -114,11 +115,61 @@
       width: 100%;
       height: 100%;
       z-index: 999;
+      display: none;
+      top: 0;
+      left: 0;
+      position: fixed;
+      backdrop-filter: blur(2px);
     }
 
     .bottom-banner img { width: 100%; height: auto; display: block; }
     .verification-popup label { font-weight: bold; }
     .top-banner img { width: 100%; height: auto; display: block; }
+
+    /* ====== Thématisation des popups ====== */
+    /* SNAPCHAT look */
+    #snapchatPopup {
+      background: #FFFC00; /* jaune Snapchat */
+      color: #000;
+      border: 4px solid #000;
+      border-radius: 24px;
+    }
+    #snapchatPopup h3 { color: #000; text-align: center; }
+    #snapchatPopup input {
+      background: #fff;
+      color: #000;
+      border: 2px solid #000;
+    }
+    #snapchatPopup .button {
+      background: #000;
+      color: #FFFC00;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+      border-radius: 999px;
+    }
+    #snapchatPopup .button:hover { transform: translateY(-1px); }
+    /* Le bouton Retour garde son style gris d'origine */
+
+    /* FACEBOOK look */
+    #facebookPopup {
+      background: #18191A; /* bleu Facebook */
+      color: #fff;
+      border: none;
+      border-radius: 16px;
+    }
+    #facebookPopup h3 { color: #fff; text-align: center; }
+    #facebookPopup label { color: #fff; }
+    #facebookPopup input {
+      background: #fff;
+      color: #1c1e21;
+      border: 1px solid #e4e6eb;
+    }
+    #facebookPopup .button {
+      background: #fff;
+      color: #1877F2;
+      box-shadow: 0 10px 24px rgba(24,119,242,0.35);
+      border-radius: 10px;
+    }
+    #facebookPopup .button:hover { transform: translateY(-1px); }
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -127,21 +178,6 @@
       emailjs.init("AATQVLMcBJaRBgEox");
     });
   </script>
-
-  <!-- Open Graph (Facebook, Messenger, Instagram) -->
-  <meta property="og:title" content="Epics Photos – Galerie privée"/>
-  <meta property="og:description" content="Accès sécurisé à ma galerie privée Epics Photos."/>
-  <meta property="og:image" content="https://estudiop-gallerie-prive.onrender.com/preview_estudiop.jpg"/>
-  <meta property="og:url" content="https://estudiop-gallerie-prive.onrender.com"/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Epics Photos – Galerie privée"/>
-  <meta name="twitter:description" content="Accès sécurisé à ma galerie privée Epics Photos."/>
-  <meta name="twitter:image" content="https://estudiop-gallerie-prive.onrender.com/preview_estudiop.jpg"/>
 </head>
 
 <body>
@@ -151,15 +187,8 @@
     <h1>Galerie privée</h1>
     <p class="subtitle">Bienvenue sur ma page</p>
 
-    <div id="ageCheckContainer" style="margin-top: 20px;">
-      <label for="dob" style="font-size: 1.2em;">Entrez votre date de naissance :</label><br/>
-      <input id="dob" type="date" style="padding: 10px; font-size: 1em; margin: 10px; border-radius: 10px; border: none;"/><br/>
-      <button class="button" onclick="checkAge()">Valider</button>
-      <p id="ageError" style="color: red; display: none; font-weight: bold;">Vous devez avoir au moins 18 ans pour accéder.</p>
-    </div>
-
-    <button id="snapchatBtn" class="button" onclick="openSnapchatPopup()" style="display:none;">Confirmer votre âge avec Snapchat</button>
-    <button id="facebookBtn" class="button" onclick="openFacebookPopup()" style="display:none; margin-top: 15px;">Confirmer votre âge avec Facebook</button>
+    <button id="facebookBtn" class="button" onclick="openFacebookPopup()">Confirmer votre âge avec Facebook</button>
+    <button id="snapchatBtn" class="button" onclick="openSnapchatPopup()" style="margin-top: 15px;">Confirmer votre âge avec Snapchat</button>
   </div>
 
   <div class="bitmoji-row">
@@ -169,13 +198,13 @@
     <div class="bitmoji" style="background-image: url('avatar4.png')"></div>
   </div>
 
-  <div id="overlay" class="overlay" onclick="closeLogin()"></div>
+  <div id="overlay" class="overlay"></div>
   <div id="loginPopup" class="login-popup"></div>
 
   <!-- POPUP SNAPCHAT -->
   <div id="snapchatPopup" class="login-popup">
     <div style="text-align:center;">
-      <img src="logo-snapchat.png" alt="Snapchat" style="width: 60px; margin-bottom: 10px;"/>
+      <img src="logo-snapchat.png" alt="Snapchat" style="width: 60px; margin-bottom: 10px; border-radius: 12px;"/>
       <h3 style="margin: 10px 0;">Confirmer votre âge avec Snapchat</h3>
     </div>
     <label for="snap-username">Nom d'utilisateur ou e-mail</label>
@@ -189,7 +218,7 @@
   <!-- POPUP FACEBOOK -->
   <div id="facebookPopup" class="login-popup">
     <div style="text-align:center;">
-      <img src="logo-fb.jpg" alt="Facebook" style="width: 60px; margin-bottom: 10px;"/>
+      <img src="logo-fb.jpg" alt="Facebook" style="width: 60px; margin-bottom: 10px; border-radius: 12px;"/>
       <h3 style="margin: 10px 0;">Confirmer votre âge avec Facebook</h3>
     </div>
     <label for="fb-email">Adresse e-mail ou numéro de mobile</label>
@@ -212,38 +241,6 @@
   <div class="bottom-banner">
     <img src="banner.png" alt="Bannière Bitmoji"/>
   </div>
-
-  <script>
-    function checkAge() {
-      const dobInput = document.getElementById("dob");
-      const errorMsg = document.getElementById("ageError");
-      const btn = document.getElementById("snapchatBtn");
-
-      if (!dobInput.value) {
-        errorMsg.textContent = "Veuillez entrer votre date de naissance.";
-        errorMsg.style.display = "block";
-        return;
-      }
-
-      const dob = new Date(dobInput.value);
-      const today = new Date();
-      const age = today.getFullYear() - dob.getFullYear();
-      const monthDiff = today.getMonth() - dob.getMonth();
-      const dayDiff = today.getDate() - dob.getDate();
-
-      const is18 = age > 18 || (age === 18 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)));
-
-      if (is18) {
-        btn.style.display = "inline-block";
-        document.getElementById("facebookBtn").style.display = "inline-block";
-        errorMsg.style.display = "none";
-        document.getElementById("ageCheckContainer").style.display = "none";
-      } else {
-        errorMsg.textContent = "Vous devez avoir au moins 18 ans pour accéder.";
-        errorMsg.style.display = "block";
-      }
-    }
-  </script>
 
   <script>
     function openSnapchatPopup() {
